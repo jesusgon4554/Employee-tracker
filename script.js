@@ -90,7 +90,7 @@ function addRole() {
 
         let departmentNames = []; 
 
-        //For each department, save the name of the department. 
+        //For each department, push the name of the department. 
         res.forEach(department => {
             departmentNames.push(department.name); 
         }); 
@@ -107,7 +107,6 @@ function addRole() {
         .then(answer => {
             const { userSelection } = answer; 
 
-            //Get ID for the selected department. 
             connection.query("SELECT department.id FROM department WHERE department.name =?", [userSelection], function(err, res) {
 
                 let departmentID = Number(res[0].id); 
@@ -186,7 +185,7 @@ function addEmployee() {
             .then(answer => {
                 const { employeeRoleChoice } = answer; 
 
-                //Get every manager to choose from.
+                //Get every manager
                 connection.query("SELECT * FROM employee", function(err, res) {
 
                     let allEmployees = []; 
@@ -201,7 +200,7 @@ function addEmployee() {
                         allEmployeeNames.push(`${employee.first_name} ${employee.last_name}`); 
                     }); 
 
-                    //find manager. 
+                    //find manager 
                     inquirer.prompt([
                         {
                             type: "list",
@@ -237,7 +236,7 @@ function addEmployee() {
                             employeeManager = null; 
                         }
 
-                        //Using the collected data, create the employee. 
+                        //create the employee. 
                         connection.query("INSERT INTO employee SET ?", {
                             first_name: firstNameInput,
                             last_name: lastNameInput,
@@ -294,7 +293,6 @@ function viewDep(){
 function viewRoles() {
     let roles = []; 
 
-    //Get the listing preference from the user. 
     inquirer.prompt([
         {
             type: "list",
@@ -344,10 +342,8 @@ function viewRoles() {
 }
 
 function viewEmployees(){
-    //display the employees table
     let employees = []; 
 
-    //Get the sorting preference from the user. 
     inquirer.prompt([
         {
             type: "list",
@@ -391,7 +387,7 @@ function viewEmployees(){
     
             res.forEach((employee,key,employeeArray) => {
     
-                //Get this employee's manager, if any. 
+                //Get this employee's manager 
                 const managerQuery = "SELECT employee.first_name, employee.last_name FROM employee WHERE id = ?"; 
                 connection.query(managerQuery, [employee.manager_id],function(err, res) {
             
@@ -404,7 +400,6 @@ function viewEmployees(){
                         thisManager = `None`; 
                     }
     
-                    //Prepare the table. 
                     employees.push({
                         "ID": employee.id,
                         "First Name": employee.first_name,
@@ -472,9 +467,6 @@ function updateRole() {
                 ])
                 .then(answer => {
                     const { newValue } = answer; 
-
-                    if(newValue === "r" || newValue === "R") return viewRoles(); 
-                    if(newValue === "d" || newValue === "D") return viewDepartments(); 
         
                     updateFields("role", fieldToUpdate, newValue, roleID); 
                 }); 
