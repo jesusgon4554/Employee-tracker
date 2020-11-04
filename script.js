@@ -255,7 +255,6 @@ function viewDep(){
     //display the departments table in the database
     let departments = [];  
 
-    //Get the listing preference from the user. 
     inquirer.prompt([
         {
             type: "list",
@@ -272,7 +271,6 @@ function viewDep(){
 
         let query = ""; 
 
-        //Adjust query depending on sorting option. 
         if(orderChoice === "ID") {
             query = "SELECT department.* from department ORDER BY department.id";
         } else if(orderChoice === "Name") {
@@ -315,7 +313,6 @@ function viewRoles() {
 
         let query = ""; 
 
-        //Depending on sorting preference, retrieve job roles. 
         if(orderChoice === "ID") {
             query = "SELECT role.*, department.name FROM role LEFT JOIN department ON role.department_id = department.id ORDER BY role.id";
         } else if(orderChoice === "Role Title") {
@@ -423,17 +420,14 @@ function viewEmployees(){
     });
 }
 
-function updateRole(){
-    // take employee role_id and change it 
+function updateRole() {
     let roles = []; 
 
-    //Get all roles.
+    //Get roles.
     const query = "SELECT role.*, department.name FROM role LEFT JOIN department ON role.department_id = department.id ORDER BY role.id";
 
     connection.query(query, function(err, res) {
 
-
-        //Output all the roles for the user to choose from. 
         res.forEach(role => {
             roles.push(`${role.id}. ${role.title} (${role.name} - $${role.salary})`); 
         }); 
@@ -441,7 +435,7 @@ function updateRole(){
         inquirer.prompt([
             {
                 type: "list",
-                message: "Which role do you want to modify.",
+                message: "Select the role you want to update.",
                 choices: [
                     ...roles
                 ],
@@ -478,8 +472,10 @@ function updateRole(){
                 ])
                 .then(answer => {
                     const { newValue } = answer; 
+
+                    if(newValue === "r" || newValue === "R") return viewRoles(); 
+                    if(newValue === "d" || newValue === "D") return viewDepartments(); 
         
-                    //Using the input information, pass along the information to update. 
                     updateFields("role", fieldToUpdate, newValue, roleID); 
                 }); 
             }); 
