@@ -293,7 +293,7 @@ function viewDep(){
     });
 }
 
-function viewRoles(){
+function viewRoles() {
     let roles = []; 
 
     //Get the listing preference from the user. 
@@ -328,18 +328,22 @@ function viewRoles(){
 
         connection.query(query, function(err, res) {
     
-    
-            //For each role retrieved, create the table and headings. 
             res.forEach((role, key, roleArray) => {
                 roles.push({
                     "ID": role.id,
                     "Title": role.title,
                     "Salary": role.salary,
                     "Department": role.name
-                });
-            });
-        });
-    });
+                }); 
+    
+                if(Object.is(roleArray.length - 1, key)) {
+                    console.log(""); 
+                    console.table(roles); 
+                    return displayMenu(); 
+                }
+            }); 
+        }); 
+    }); 
 }
 
 function viewEmployees(){
