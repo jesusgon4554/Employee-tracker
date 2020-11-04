@@ -1,5 +1,5 @@
 # Employee-tracker
-![mysql](assets/images/mysql.png)
+![mysql](assets/images/sql.png)
 ![terminal](assets/images/terminal.png)
 #Description
 An app created to keep track of the employees in a workplace along with the roles, departments and salaries.
