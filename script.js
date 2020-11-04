@@ -141,7 +141,6 @@ function addRole() {
     }); 
 }
 
-
 function addEmployee() {
     inquirer.prompt([
         {
@@ -158,9 +157,8 @@ function addEmployee() {
     .then(answers => {
         const { firstNameInput, lastNameInput } = answers; 
 
-        //Get every role title to choose from. 
+        
         connection.query("SELECT role.id, role.title FROM role", function(err, res) {
-            if(err) displayError(); 
 
             let allRoles = []; 
             let allRoleTitles = []; 
@@ -184,6 +182,7 @@ function addEmployee() {
                     name: "employeeRoleChoice"
                 }
             ])
+    
             .then(answer => {
                 const { employeeRoleChoice } = answer; 
 
@@ -252,7 +251,6 @@ function addEmployee() {
     }); 
 }
 
-
 function viewDep(){
     //display the departments table in the database
     let departments = [];  
@@ -282,7 +280,7 @@ function viewDep(){
         }
 
         connection.query(query, function(err, res) {
-            if(err) displayError(); 
+    
     
             //For each department, store the ID and name. 
             res.forEach((department, key, departmentArray) => {
@@ -329,7 +327,7 @@ function viewRoles(){
         }
 
         connection.query(query, function(err, res) {
-            if(err) displayError(); 
+    
     
             //For each role retrieved, create the table and headings. 
             res.forEach((role, key, roleArray) => {
@@ -388,14 +386,14 @@ function viewEmployees(){
         }
 
         connection.query(query, function(err, res) {
-            if(err) displayError(); 
+    
     
             res.forEach((employee,key,employeeArray) => {
     
                 //Get this employee's manager, if any. 
                 const managerQuery = "SELECT employee.first_name, employee.last_name FROM employee WHERE id = ?"; 
                 connection.query(managerQuery, [employee.manager_id],function(err, res) {
-                    if(err) displayError(); 
+            
     
                     let thisManager; 
     
@@ -429,7 +427,7 @@ function updateRole(){
     const query = "SELECT role.*, department.name FROM role LEFT JOIN department ON role.department_id = department.id ORDER BY role.id";
 
     connection.query(query, function(err, res) {
-        if(err) displayError(); 
+
 
         //Output all the roles for the user to choose from. 
         res.forEach(role => {
@@ -439,7 +437,7 @@ function updateRole(){
         inquirer.prompt([
             {
                 type: "list",
-                message: "Select the role you want to modify.",
+                message: "Which role do you want to modify.",
                 choices: [
                     ...roles
                 ],
@@ -470,15 +468,12 @@ function updateRole(){
                 inquirer.prompt([
                     {
                         type: "input",
-                        message: `Enter the new value for ${fieldToUpdate}. (To go back and view roles, enter R. To go back and view departments, enter D.)`,
+                        message: `Enter the new value for ${fieldToUpdate}.`,
                         name: "newValue"
                     }
                 ])
                 .then(answer => {
                     const { newValue } = answer; 
-
-                    if(newValue === "r" || newValue === "R") return viewRoles(); 
-                    if(newValue === "d" || newValue === "D") return viewDepartments(); 
         
                     //Using the input information, pass along the information to update. 
                     updateFields("role", fieldToUpdate, newValue, roleID); 
@@ -495,8 +490,7 @@ connection.connect(function(err){
     console.log(`connected as id ${connection.threadID}`);
     
     connection.end();
-    })
-}
+});
 
 
 displayMenu()
